@@ -53,9 +53,13 @@ class _ConnectionEditScreenState extends State<ConnectionEditScreen> {
       _snack(context, 'Choose a key (identity)');
       return;
     }
-    if (_clearPass) await store.clearPassword(c.id);
-    await store.saveConnection(c, password: _pass.text.isEmpty ? null : _pass.text);
-    if (mounted) Navigator.pop(context);
+    try {
+      if (_clearPass) await store.clearPassword(c.id);
+      await store.saveConnection(c, password: _pass.text.isEmpty ? null : _pass.text);
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) _snack(context, 'Save error: $e');
+    }
   }
 
   @override
@@ -65,7 +69,7 @@ class _ConnectionEditScreenState extends State<ConnectionEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.existing == null ? 'New connection' : 'Edit connection'),
-        actions: [IconButton(icon: const Icon(Icons.check), onPressed: _save)],
+        actions: [TextButton.icon(onPressed: _save, icon: const Icon(Icons.check), label: const Text('SAVE'))],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -164,6 +168,12 @@ class _ConnectionEditScreenState extends State<ConnectionEditScreen> {
                 DropdownMenuItem<String?>(value: s.id, child: Text(s.name.isEmpty ? s.command : s.name)),
             ],
             onChanged: (v) => setState(() => c.startupSnippetId = v),
+          ),
+          const SizedBox(height: 32),
+          FilledButton.icon(
+            onPressed: _save,
+            icon: const Icon(Icons.save),
+            label: const Padding(padding: EdgeInsets.all(12), child: Text('SAVE CONNECTION')),
           ),
         ],
       ),
@@ -265,7 +275,7 @@ class _IdentityImportScreenState extends State<IdentityImportScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Import key'),
-        actions: [IconButton(icon: const Icon(Icons.check), onPressed: _save)],
+        actions: [TextButton.icon(onPressed: _save, icon: const Icon(Icons.check), label: const Text('SAVE'))],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -346,8 +356,12 @@ class _ForwardEditScreenState extends State<ForwardEditScreen> {
     f.bindPort = bind;
     f.targetPort = port;
     f.targetHost = _host.text.trim();
-    await store.saveForward(f);
-    if (mounted) Navigator.pop(context);
+    try {
+      await store.saveForward(f);
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) _snack(context, 'Save error: $e');
+    }
   }
 
   @override
@@ -357,7 +371,7 @@ class _ForwardEditScreenState extends State<ForwardEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.existing == null ? 'New port forward' : 'Edit port forward'),
-        actions: [IconButton(icon: const Icon(Icons.check), onPressed: _save)],
+        actions: [TextButton.icon(onPressed: _save, icon: const Icon(Icons.check), label: const Text('SAVE'))],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),

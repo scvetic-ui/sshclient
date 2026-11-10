@@ -31,8 +31,16 @@ class HomeScreen extends StatelessWidget {
       port = int.tryParse(host.substring(colon + 1)) ?? 22;
       host = host.substring(0, colon);
     }
-    openExisting(
-        context, sessions.open(Connection(id: newId(), host: host, port: port, username: user)));
+    // Remember quick connections in the list, like JuiceSSH does.
+    Connection? c;
+    for (final e in store.connections) {
+      if (e.type == ConnType.ssh && e.host == host && e.port == port && e.username == user) c = e;
+    }
+    if (c == null) {
+      c = Connection(id: newId(), host: host, port: port, username: user);
+      await store.saveConnection(c);
+    }
+    if (context.mounted) openSession(context, c);
   }
 
   void _push(BuildContext context, Widget screen) =>

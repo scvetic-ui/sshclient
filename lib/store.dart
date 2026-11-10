@@ -58,7 +58,8 @@ class Store extends ChangeNotifier {
       'knownHosts': knownHosts,
       'settings': {'fontSize': fontSize, 'theme': themeName},
     };
-    await _file?.writeAsString(jsonEncode(data));
+    _file ??= File('${(await getApplicationSupportDirectory()).path}/data.json');
+    await _file!.writeAsString(jsonEncode(data), flush: true);
     notifyListeners();
   }
 
@@ -87,8 +88,14 @@ class Store extends ChangeNotifier {
   // ---- connections ----
   Future<void> saveConnection(Connection c, {String? password}) async {
     _upsert(connections, c, (e) => e.id);
-    if (password != null) await _secure.write(key: 'pw_${c.id}', value: password);
-    await _save();
+    await _save(); // save the connection first, even if the password fails
+    if (password != null) {
+      try {
+        await _secure.write(key: 'pw_${c.id}', value: password);
+      } catch (e) {
+        throw Exception('Connection saved, but the password could not be stored: $e');
+      }
+    }
   }
 
   Future<String?> password(String connectionId) => _secure.read(key: 'pw_$connectionId');
@@ -105,6 +112,7 @@ class Store extends ChangeNotifier {
   // ---- identities ----
   Future<void> saveIdentity(Identity i, {String? privatePem, String? passphrase}) async {
     _upsert(identities, i, (e) => e.id);
+    await _save();
     if (privatePem != null) await _secure.write(key: 'key_${i.id}', value: privatePem);
     if (passphrase != null) await _secure.write(key: 'pass_${i.id}', value: passphrase);
     await _save();
