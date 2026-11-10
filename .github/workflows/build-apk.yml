@@ -26,9 +26,37 @@ jobs:
       - run: flutter create --platforms=android --org com.konzola --project-name konzola .
       - run: rm -rf test
 
+      # Sign with the permanent upload key (password in repo secret KEYSTORE_PASSWORD).
+      # Without the secret the build still works, signed with a temporary debug key.
+      - name: Configure release signing
+        env:
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          if [ -z "$KS_PASS" ]; then echo "No KEYSTORE_PASSWORD secret - using debug key"; exit 0; fi
+          cp signing/upload.jks android/app/upload.jks
+          python3 - <<'PY'
+          import re
+          p = 'android/app/build.gradle.kts'
+          s = open(p).read()
+          s = s.replace('android {', '''android {
+              signingConfigs {
+                  create("release") {
+                      storeFile = file("upload.jks")
+                      storePassword = System.getenv("KS_PASS")
+                      keyAlias = "upload"
+                      keyPassword = System.getenv("KS_PASS")
+                  }
+              }''', 1)
+          assert 'signingConfigs.getByName("debug")' in s, 'gradle template changed'
+          s = s.replace('signingConfigs.getByName("debug")', 'signingConfigs.getByName("release")')
+          open(p, 'w').write(s)
+          PY
+
       - run: flutter pub get
       - run: flutter analyze --no-fatal-infos --no-fatal-warnings
       - run: flutter build apk --release
+        env:
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
 
       - uses: actions/upload-artifact@v4
         with:
