@@ -30,7 +30,7 @@ GeneratedKey generateEd25519(String comment) {
   final rnd = Random.secure();
   final seed = Uint8List.fromList(List.generate(32, (_) => rnd.nextInt(256)));
   final sk = SigningKey.fromSeed(seed);
-  final pub = Uint8List.fromList(sk.verifyKey.asTypedList);
+  final pub = Uint8List.fromList(sk.verifyKey);
 
   final type = utf8.encode('ssh-ed25519');
   final pubBlob = (_Writer()
