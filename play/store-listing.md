@@ -1,11 +1,11 @@
-# Google Play listing – LemonSSH
+# Google Play listing – Lemon SSH Client
 
-**App name (≤30):** LemonSSH
-**Short description (≤80):** SSH, Telnet and local shell terminal with keys, snippets and port forwarding.
+**App name (≤30):** Lemon SSH Client  (home-screen label in the app stays "LemonSSH")
+**Short description (≤80):** SSH client, Telnet and local terminal with keys, snippets and port forwarding.
 **Category:** Tools (or Communication). **Contains ads:** No. **Price:** Free.
 
 ## Full description
-LemonSSH is a fast, simple terminal for managing your servers from your Android phone.
+Lemon SSH Client is a fast, simple terminal for managing your servers from your Android phone.
 
 • SSH, Telnet and local shell in one app
 • Saved connections, frequently used list and quick connect
