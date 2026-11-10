@@ -94,9 +94,9 @@ class _TerminalScreenState extends State<TerminalScreen> {
       case 'copy':
         _copy();
       case 'bigger':
-        session.setFontSize(session.fontSize + 1);
+        session.setFontSize(session.fontSize + 0.5);
       case 'smaller':
-        session.setFontSize(session.fontSize - 1);
+        session.setFontSize(session.fontSize - 0.5);
       case 'reconnect':
         _reconnect();
       case 'close':
@@ -131,7 +131,8 @@ class _TerminalScreenState extends State<TerminalScreen> {
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: TerminalView(
+                        child: ClipRect(
+                          child: TerminalView(
                           session.terminal,
                           controller: session.controller,
                           focusNode: _focus,
@@ -139,6 +140,7 @@ class _TerminalScreenState extends State<TerminalScreen> {
                           backgroundOpacity: 1,
                           theme: theme,
                           textStyle: TerminalStyle(fontSize: session.fontSize),
+                          ),
                         ),
                       ),
                       Positioned(
@@ -188,7 +190,7 @@ class _ExtraKeys extends StatefulWidget {
 }
 
 class _ExtraKeysState extends State<_ExtraKeys> {
-  static const _barColor = Color(0xFF1C4552);
+  static const _barColor = Color(0xFF1F4552);
   static const _pressedColor = Color(0xFF2E6273);
   static const _activeColor = Color(0xFF3F8EA3);
   static const _textColor = Color(0xFFF1EBD5);
@@ -222,19 +224,18 @@ class _ExtraKeysState extends State<_ExtraKeys> {
     bool repeat = false,
   }) {
     final content = SizedBox(
-      height: 52,
+      height: 46,
       child: Center(
         child: icon != null
-            ? Icon(icon, color: _textColor, size: 30)
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(label!,
-                      style: const TextStyle(
-                          color: _textColor, fontSize: 22, fontWeight: FontWeight.w500)),
-                ),
-              ),
+            ? Icon(icon, color: const Color(0xFFB8C4C8), size: 30)
+            : Text(label!,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                softWrap: true,
+                overflow: TextOverflow.clip,
+                textScaler: TextScaler.noScaling,
+                style: const TextStyle(
+                    color: _textColor, fontSize: 19, height: 1.05, fontWeight: FontWeight.w500)),
       ),
     );
 
@@ -263,7 +264,10 @@ class _ExtraKeysState extends State<_ExtraKeys> {
         child: key,
       );
     }
-    return Expanded(flex: flex, child: key);
+    return Expanded(
+      flex: flex,
+      child: Padding(padding: const EdgeInsets.all(0.5), child: key),
+    );
   }
 
   @override
@@ -271,7 +275,7 @@ class _ExtraKeysState extends State<_ExtraKeys> {
     // Flex units: row 1 has 9 keys of 3 units; the first 3 keys of row 2
     // are 4 units wide so both rows line up from HOME/← onwards.
     return Container(
-      color: _barColor,
+      color: const Color(0xFF173A45),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

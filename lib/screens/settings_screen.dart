@@ -24,17 +24,17 @@ class SettingsScreen extends StatelessWidget {
               Expanded(
                 child: Slider(
                   value: store.fontSize,
-                  min: 8,
-                  max: 28,
-                  divisions: 20,
-                  label: store.fontSize.round().toString(),
+                  min: 6,
+                  max: 24,
+                  divisions: 36,
+                  label: store.fontSize.toStringAsFixed(1),
                   onChanged: (v) {
                     store.fontSize = v;
                     store.saveSettings();
                   },
                 ),
               ),
-              SizedBox(width: 48, child: Text('${store.fontSize.round()}')),
+              SizedBox(width: 48, child: Text(store.fontSize.toStringAsFixed(1))),
             ]),
             const Divider(),
             const ListTile(

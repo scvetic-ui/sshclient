@@ -25,7 +25,7 @@ class Store extends ChangeNotifier {
   final knownHosts = <String, String>{};
 
   // settings
-  double fontSize = 14;
+  double fontSize = 9;
   String themeName = 'Solarized Dark';
 
   Future<void> load() async {
@@ -41,7 +41,7 @@ class Store extends ChangeNotifier {
       snippets.addAll(list('snippets').map(Snippet.fromJson));
       portForwards.addAll(list('portForwards').map(PortForward.fromJson));
       final st = ((j['settings'] as Map?) ?? const {}).cast<String, dynamic>();
-      fontSize = (st['fontSize'] as num?)?.toDouble() ?? fontSize;
+      fontSize = (st['termFontSize'] as num?)?.toDouble() ?? fontSize;
       themeName = st['theme'] as String? ?? themeName;
       knownHosts.addAll(((j['knownHosts'] as Map?) ?? const {}).cast<String, String>());
     } catch (e) {
@@ -56,7 +56,7 @@ class Store extends ChangeNotifier {
       'snippets': snippets.map((e) => e.toJson()).toList(),
       'portForwards': portForwards.map((e) => e.toJson()).toList(),
       'knownHosts': knownHosts,
-      'settings': {'fontSize': fontSize, 'theme': themeName},
+      'settings': {'termFontSize': fontSize, 'theme': themeName},
     };
     _file ??= File('${(await getApplicationSupportDirectory()).path}/data.json');
     await _file!.writeAsString(jsonEncode(data), flush: true);

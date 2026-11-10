@@ -88,7 +88,7 @@ class ActiveSession extends ChangeNotifier {
   void runCommand(String command) => backend.write('$command\r');
 
   void setFontSize(double size) {
-    fontSize = size.clamp(8, 32).toDouble();
+    fontSize = size.clamp(6, 32).toDouble();
     notifyListeners();
   }
 
