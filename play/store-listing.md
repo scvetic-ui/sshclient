@@ -26,5 +26,5 @@ LemonSSH is a fast, simple terminal for managing your servers from your Android 
 
 ## Assets
 - Icon 512×512: branding/play-store-icon-512.png (regenerate with branding/make_icons.py)
-- Feature graphic 1024×500 and ≥2 phone screenshots: still needed
-- Privacy policy URL: host play/privacy-policy.md as a public page
+- Feature graphic 1024×500: branding/feature-graphic-1024x500.png; ≥2 phone screenshots: still needed (take on the phone)
+- Privacy policy URL: https://scvetic-ui.github.io/sshclient/ (GitHub Pages, from docs/)
