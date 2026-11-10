@@ -6,7 +6,7 @@ import 'sessions.dart';
 import 'store.dart';
 
 /// Working name — change here to rename the app UI.
-const appName = 'Konzola';
+const appName = 'JuicySSH Client';
 
 /// Main color of the menu bar — change to taste.
 const kBrand = Color(0xFF00838F);

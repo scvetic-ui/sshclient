@@ -25,6 +25,8 @@ jobs:
       # Generates the missing Android project files (keeps our lib/ and manifest)
       - run: flutter create --platforms=android --org com.konzola --project-name konzola .
       - run: rm -rf test
+      - name: Install app icon
+        run: cp -r branding/res/. android/app/src/main/res/
 
       # Sign with the permanent upload key (password in repo secret KEYSTORE_PASSWORD).
       # Without the secret the build still works, signed with a temporary debug key.

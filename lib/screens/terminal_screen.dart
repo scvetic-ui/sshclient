@@ -30,6 +30,42 @@ class _TerminalScreenState extends State<TerminalScreen> {
   final _focus = FocusNode();
   ActiveSession get session => widget.session;
 
+  // Pinch-to-zoom: tracks raw pointers, so it does not fight text selection/scrolling.
+  final Map<int, Offset> _pointers = {};
+  double _pinchStartDist = 0;
+  double _pinchStartFont = 0;
+
+  double _pinchDist() {
+    final p = _pointers.values.toList();
+    return (p[0] - p[1]).distance;
+  }
+
+  void _pointerDown(PointerDownEvent e) {
+    _pointers[e.pointer] = e.position;
+    if (_pointers.length == 2) {
+      _pinchStartDist = _pinchDist();
+      _pinchStartFont = session.fontSize;
+    }
+  }
+
+  void _pointerMove(PointerMoveEvent e) {
+    if (!_pointers.containsKey(e.pointer)) return;
+    _pointers[e.pointer] = e.position;
+    if (_pointers.length == 2 && _pinchStartDist > 0) {
+      final snapped = ((_pinchStartFont * _pinchDist() / _pinchStartDist) * 2).round() / 2;
+      if (snapped != session.fontSize) session.setFontSize(snapped);
+    }
+  }
+
+  void _pointerUp(PointerEvent e) {
+    final wasPinch = _pointers.length >= 2;
+    _pointers.remove(e.pointer);
+    if (wasPinch && _pointers.length < 2) {
+      store.fontSize = session.fontSize; // remember the size for next time
+      store.saveSettings();
+    }
+  }
+
   @override
   void dispose() {
     _focus.dispose();
@@ -131,15 +167,21 @@ class _TerminalScreenState extends State<TerminalScreen> {
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: ClipRect(
-                          child: TerminalView(
-                          session.terminal,
-                          controller: session.controller,
-                          focusNode: _focus,
-                          autofocus: true,
-                          backgroundOpacity: 1,
-                          theme: theme,
-                          textStyle: TerminalStyle(fontSize: session.fontSize),
+                        child: Listener(
+                          onPointerDown: _pointerDown,
+                          onPointerMove: _pointerMove,
+                          onPointerUp: _pointerUp,
+                          onPointerCancel: _pointerUp,
+                          child: ClipRect(
+                            child: TerminalView(
+                              session.terminal,
+                              controller: session.controller,
+                              focusNode: _focus,
+                              autofocus: true,
+                              backgroundOpacity: 1,
+                              theme: theme,
+                              textStyle: TerminalStyle(fontSize: session.fontSize),
+                            ),
                           ),
                         ),
                       ),
