@@ -25,7 +25,7 @@ class Store extends ChangeNotifier {
   final knownHosts = <String, String>{};
 
   // settings
-  double fontSize = 9;
+  double fontSize = 8;
   String themeName = 'Solarized Dark';
 
   Future<void> load() async {
