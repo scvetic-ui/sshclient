@@ -171,6 +171,85 @@ class Store extends ChangeNotifier {
     await _save();
   }
 
+  // ---- backup ----
+  /// JSON backup of everything. With [secrets] it also contains saved
+  /// passwords and private keys (plain text!).
+  Future<String> exportJson({required bool secrets}) async {
+    final conns = <Map<String, dynamic>>[];
+    for (final c in connections) {
+      final m = c.toJson();
+      if (secrets) {
+        final pw = await password(c.id);
+        if (pw != null) m['password'] = pw;
+      }
+      conns.add(m);
+    }
+    final ids = <Map<String, dynamic>>[];
+    for (final i in identities) {
+      final m = i.toJson();
+      if (secrets) {
+        final k = await privateKey(i.id);
+        if (k != null) m['privateKey'] = k;
+        final p = await passphrase(i.id);
+        if (p != null) m['passphrase'] = p;
+      }
+      ids.add(m);
+    }
+    return const JsonEncoder.withIndent('  ').convert({
+      'format': 'citrus-ssh-backup',
+      'version': 1,
+      'secrets': secrets,
+      'connections': conns,
+      'identities': ids,
+      'snippets': snippets.map((e) => e.toJson()).toList(),
+      'portForwards': portForwards.map((e) => e.toJson()).toList(),
+      'knownHosts': knownHosts,
+    });
+  }
+
+  /// Merges a backup into the current data (same id = overwritten).
+  Future<String> importJson(String text) async {
+    final j = jsonDecode(text);
+    if (j is! Map || j['format'] != 'citrus-ssh-backup') {
+      throw const FormatException('this is not a Citrus SSH backup');
+    }
+    List<Map<String, dynamic>> list(String k) =>
+        ((j[k] as List?) ?? const []).cast<Map<String, dynamic>>();
+
+    var nc = 0, ni = 0, ns = 0, nf = 0;
+    for (final m0 in list('identities')) {
+      final m = Map<String, dynamic>.from(m0);
+      final pem = m.remove('privateKey') as String?;
+      final pass = m.remove('passphrase') as String?;
+      if (pem == null) continue; // key without private part is useless
+      final i = Identity.fromJson(m);
+      _upsert(identities, i, (e) => e.id);
+      await _secure.write(key: 'key_${i.id}', value: pem);
+      if (pass != null) await _secure.write(key: 'pass_${i.id}', value: pass);
+      ni++;
+    }
+    for (final m0 in list('connections')) {
+      final m = Map<String, dynamic>.from(m0);
+      final pw = m.remove('password') as String?;
+      final c = Connection.fromJson(m);
+      if (c.identityId != null && identity(c.identityId) == null) c.identityId = null;
+      _upsert(connections, c, (e) => e.id);
+      if (pw != null) await _secure.write(key: 'pw_${c.id}', value: pw);
+      nc++;
+    }
+    for (final m in list('snippets')) {
+      _upsert(snippets, Snippet.fromJson(m), (e) => e.id);
+      ns++;
+    }
+    for (final m in list('portForwards')) {
+      _upsert(portForwards, PortForward.fromJson(m), (e) => e.id);
+      nf++;
+    }
+    ((j['knownHosts'] as Map?) ?? const {}).forEach((k, v) => knownHosts.putIfAbsent('$k', () => '$v'));
+    await _save();
+    return '$nc connections, $ni keys, $ns snippets, $nf forwards';
+  }
+
   // ---- known hosts ----
   Future<void> trustHost(String hostKey, String fingerprint) async {
     knownHosts[hostKey] = fingerprint;

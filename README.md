@@ -1,6 +1,6 @@
 # Konzola — SSH klijent za Android (zamena za JuiceSSH)
 
-Naziv aplikacije je trenutno „JuicySSH Client“; menja se u `lib/app_state.dart` (`appName`, a boja trake je `kBrand`) i u
+Naziv aplikacije je trenutno „Citrus SSH“; menja se u `lib/app_state.dart` (`appName`, a boja trake je `kBrand`) i u
 `android/app/src/main/AndroidManifest.xml` (`android:label`).
 
 ## Šta ima prva verzija
@@ -13,6 +13,7 @@ Naziv aplikacije je trenutno „JuicySSH Client“; menja se u `lib/app_state.da
 - **Dodatna tastatura u dva reda** kao u JuiceSSH-u: ESC / | - HOME ↑ END PGUP FN i TAB CTRL ALT ← ↓ → PGDN ⌨
   (FN pa 1–0, -, = daje F1–F12; strelice se ponavljaju dok ih držiš; ⌨ skriva/prikazuje tastaturu)
 - **Rad u pozadini**: sesije ostaju povezane kad izađeš iz aplikacije (foreground servis sa notifikacijom); dugme Nazad u glavnom meniju samo minimizuje aplikaciju dok postoji aktivna sesija
+- **Rezervna kopija**: Settings → Backup, izvoz u clipboard (sa ili bez lozinki i ključeva) i uvoz
 - **Pinch zoom**: povlačenje dva prsta menja veličinu slova u terminalu
 - **Teme terminala**: Solarized Dark, Dark, Monokai, Light; veličina slova u podešavanjima
 - **SSH ključevi**: generisanje Ed25519 ključa, uvoz postojećeg (OpenSSH/PEM — RSA, ECDSA, Ed25519, i sa lozinkom)

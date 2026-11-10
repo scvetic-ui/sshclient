@@ -1,8 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:xterm/xterm.dart';
 
 import '../app_state.dart';
 import '../terminal_themes.dart';
+import 'tabs.dart' show snack;
+
+Future<void> _export(BuildContext context, bool secrets) async {
+  if (secrets) {
+    final ok = await prompter.confirm(
+      'Include passwords and keys?',
+      'The backup will contain your saved passwords and private keys in plain text. '
+          'Paste it only somewhere private (e.g. a password manager) and clear the '
+          'keyboard clipboard history afterwards.',
+      ok: 'Copy',
+    );
+    if (!ok) return;
+  }
+  final text = await store.exportJson(secrets: secrets);
+  await Clipboard.setData(ClipboardData(text: text));
+  if (context.mounted) snack(context, 'Backup copied — paste it into a safe place (Notes, email to yourself…)');
+}
+
+Future<void> _import(BuildContext context) async {
+  final data = await Clipboard.getData(Clipboard.kTextPlain);
+  final text = data?.text?.trim() ?? '';
+  if (text.isEmpty) {
+    snack(context, 'Clipboard is empty — copy the backup text first');
+    return;
+  }
+  try {
+    final r = await store.importJson(text);
+    if (context.mounted) snack(context, 'Imported: $r');
+  } catch (e) {
+    if (context.mounted) snack(context, 'Import failed: $e');
+  }
+}
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -49,6 +82,26 @@ class SettingsScreen extends StatelessWidget {
                   store.saveSettings();
                 },
               ),
+            const Divider(),
+            const ListTile(title: Text('Backup', style: TextStyle(fontWeight: FontWeight.bold))),
+            ListTile(
+              leading: const Icon(Icons.upload),
+              title: const Text('Export (no passwords)'),
+              subtitle: const Text('Connections, snippets, forwards → clipboard'),
+              onTap: () => _export(context, false),
+            ),
+            ListTile(
+              leading: const Icon(Icons.upload_file),
+              title: const Text('Export with passwords and keys'),
+              subtitle: const Text('Plain text — keep it private'),
+              onTap: () => _export(context, true),
+            ),
+            ListTile(
+              leading: const Icon(Icons.download),
+              title: const Text('Import from clipboard'),
+              subtitle: const Text('Copy the backup text first, then tap here'),
+              onTap: () => _import(context),
+            ),
           ],
         ),
       ),
