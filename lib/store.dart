@@ -211,7 +211,7 @@ class Store extends ChangeNotifier {
   Future<String> importJson(String text) async {
     final j = jsonDecode(text);
     if (j is! Map || (j['format'] != 'lemon-ssh-backup' && j['format'] != 'citrus-ssh-backup')) {
-      throw const FormatException('this is not a Lemon SSH backup');
+      throw const FormatException('this is not a LemonSSH backup');
     }
     List<Map<String, dynamic>> list(String k) =>
         ((j[k] as List?) ?? const []).cast<Map<String, dynamic>>();

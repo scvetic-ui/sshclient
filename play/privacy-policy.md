@@ -1,8 +1,8 @@
-# Privacy Policy – Lemon SSH Client
+# Privacy Policy – LemonSSH
 
 Last updated: 10 November 2026
 
-Lemon SSH Client ("the app") is an SSH, Telnet and local-shell client. It is developed by Stupovi Studio.
+LemonSSH ("the app") is an SSH, Telnet and local-shell client. It is developed by Stupovi Studio.
 
 **Data we collect:** none. The app has no accounts, no analytics, no advertising and no servers of our own. We do not receive, store or share any of your data.
 

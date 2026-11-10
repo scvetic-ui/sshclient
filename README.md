@@ -1,6 +1,6 @@
 # Konzola — SSH klijent za Android (zamena za JuiceSSH)
 
-Naziv aplikacije je trenutno „Lemon SSH Client“; menja se u `lib/app_state.dart` (`appName`, a boja trake je `kBrand`) i u
+Naziv aplikacije je trenutno „LemonSSH“; menja se u `lib/app_state.dart` (`appName`, a boja trake je `kBrand`) i u
 `android/app/src/main/AndroidManifest.xml` (`android:label`).
 
 ## Šta ima prva verzija
