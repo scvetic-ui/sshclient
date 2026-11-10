@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'background.dart';
 import 'forwarding.dart';
 import 'prompter.dart';
 import 'sessions.dart';
@@ -15,3 +16,4 @@ final store = Store();
 final prompter = Prompter();
 final sessions = SessionManager();
 final forwards = ForwardManager();
+final background = Background();

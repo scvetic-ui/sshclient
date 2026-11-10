@@ -27,6 +27,7 @@ class Store extends ChangeNotifier {
   // settings
   double fontSize = 8;
   String themeName = 'Solarized Dark';
+  bool askedBatteryOpt = false;
 
   Future<void> load() async {
     final dir = await getApplicationSupportDirectory();
@@ -43,6 +44,7 @@ class Store extends ChangeNotifier {
       final st = ((j['settings'] as Map?) ?? const {}).cast<String, dynamic>();
       fontSize = (st['termFontSize'] as num?)?.toDouble() ?? fontSize;
       themeName = st['theme'] as String? ?? themeName;
+      askedBatteryOpt = st['askedBatteryOpt'] as bool? ?? false;
       knownHosts.addAll(((j['knownHosts'] as Map?) ?? const {}).cast<String, String>());
     } catch (e) {
       debugPrint('Could not load data: $e');
@@ -56,7 +58,7 @@ class Store extends ChangeNotifier {
       'snippets': snippets.map((e) => e.toJson()).toList(),
       'portForwards': portForwards.map((e) => e.toJson()).toList(),
       'knownHosts': knownHosts,
-      'settings': {'termFontSize': fontSize, 'theme': themeName},
+      'settings': {'termFontSize': fontSize, 'theme': themeName, 'askedBatteryOpt': askedBatteryOpt},
     };
     _file ??= File('${(await getApplicationSupportDirectory()).path}/data.json');
     await _file!.writeAsString(jsonEncode(data), flush: true);

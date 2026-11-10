@@ -12,6 +12,7 @@ Naziv aplikacije je trenutno „JuicySSH Client“; menja se u `lib/app_state.da
 - **Terminal u boji** (xterm-256color), kopiranje/lepljenje, veći/manji font
 - **Dodatna tastatura u dva reda** kao u JuiceSSH-u: ESC / | - HOME ↑ END PGUP FN i TAB CTRL ALT ← ↓ → PGDN ⌨
   (FN pa 1–0, -, = daje F1–F12; strelice se ponavljaju dok ih držiš; ⌨ skriva/prikazuje tastaturu)
+- **Rad u pozadini**: sesije ostaju povezane kad izađeš iz aplikacije (foreground servis sa notifikacijom); dugme Nazad u glavnom meniju samo minimizuje aplikaciju dok postoji aktivna sesija
 - **Pinch zoom**: povlačenje dva prsta menja veličinu slova u terminalu
 - **Teme terminala**: Solarized Dark, Dark, Monokai, Light; veličina slova u podešavanjima
 - **SSH ključevi**: generisanje Ed25519 ključa, uvoz postojećeg (OpenSSH/PEM — RSA, ECDSA, Ed25519, i sa lozinkom)

@@ -55,7 +55,7 @@ class ManageScreen extends StatelessWidget {
         ),
         body: ListenableBuilder(
           listenable: Listenable.merge([store, forwards]),
-          builder: (context, _) => const TabBarView(children: [
+          builder: (context, _) => TabBarView(children: [
             ConnectionsTab(),
             SnippetsTab(),
             IdentitiesTab(),

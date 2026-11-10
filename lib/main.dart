@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import 'app_state.dart';
 import 'prompter.dart';
@@ -6,6 +7,8 @@ import 'screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterForegroundTask.initCommunicationPort();
+  background.init();
   await store.load();
   runApp(const KonzolaApp());
 }

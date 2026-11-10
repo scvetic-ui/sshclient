@@ -98,6 +98,12 @@ class ActiveSession extends ChangeNotifier {
 class SessionManager extends ChangeNotifier {
   final List<ActiveSession> sessions = [];
 
+  void _syncBackground() {
+    final live = sessions.where((s) => !s.finished).toList();
+    final text = live.isEmpty ? '' : live.map((s) => s.title).join(', ');
+    background.sync(live.length, text);
+  }
+
   ActiveSession open(Connection c) {
     final Backend backend = switch (c.type) {
       ConnType.ssh => SshBackend(c, store, prompter),
@@ -107,6 +113,7 @@ class SessionManager extends ChangeNotifier {
     final s = ActiveSession(c, backend);
     sessions.add(s);
     notifyListeners();
+    _syncBackground();
     _run(s);
     return s;
   }
@@ -131,11 +138,13 @@ class SessionManager extends ChangeNotifier {
   void _changed(ActiveSession s) {
     s.markChanged();
     notifyListeners();
+    _syncBackground();
   }
 
   Future<void> close(ActiveSession s) async {
     sessions.remove(s);
     notifyListeners();
+    _syncBackground();
     await s.backend.close();
   }
 }

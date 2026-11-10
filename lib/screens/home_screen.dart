@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import '../app_state.dart';
 import '../models.dart';
@@ -48,7 +50,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        // Back from the main menu: keep live sessions running in the background.
+        if (sessions.sessions.any((s) => !s.finished)) {
+          FlutterForegroundTask.minimizeApp();
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kBrand,
@@ -147,6 +160,7 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
+    ),
     );
   }
 }
