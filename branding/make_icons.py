@@ -1,11 +1,11 @@
-"""Draws the app icon (a halved orange) and writes all Android icon sizes.
+"""Draws the app icon (a halved lemon) and writes all Android icon sizes.
 Run: python3 branding/make_icons.py   (needs Pillow)"""
 import math, os
 from PIL import Image, ImageDraw
 
 S = 2048  # supersampled canvas
 
-def orange(size_frac, with_bg):
+def lemon(size_frac, with_bg):
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     if with_bg:
@@ -14,16 +14,16 @@ def orange(size_frac, with_bg):
     R = S * size_frac / 2
     def circle(r, fill):
         d.ellipse([c - r, c - r, c + r, c + r], fill=fill)
-    circle(R, (239, 108, 0, 255))            # rind
-    circle(R * 0.93, (255, 236, 205, 255))   # pith
+    circle(R, (230, 170, 0, 255))            # rind
+    circle(R * 0.93, (255, 249, 214, 255))   # pith
     flesh = R * 0.86
     n = 10
     for i in range(n):                        # juicy wedges
         a0 = i * 360 / n - 90 + 2.2
         a1 = (i + 1) * 360 / n - 90 - 2.2
-        col = (255, 167, 38, 255) if i % 2 == 0 else (255, 183, 77, 255)
+        col = (253, 216, 53, 255) if i % 2 == 0 else (255, 235, 90, 255)
         d.pieslice([c - flesh, c - flesh, c + flesh, c + flesh], a0, a1, fill=col)
-    circle(R * 0.085, (255, 236, 205, 255))   # centre
+    circle(R * 0.085, (255, 249, 214, 255))   # centre
     # little highlights on wedges
     for i in range(n):
         a = math.radians((i + 0.5) * 360 / n - 90)
@@ -31,7 +31,7 @@ def orange(size_frac, with_bg):
             x = c + math.cos(a) * flesh * rr
             y = c + math.sin(a) * flesh * rr
             h = R * (0.035 - 0.01 * k)
-            d.ellipse([x - h, y - h, x + h, y + h], fill=(255, 224, 160, 255))
+            d.ellipse([x - h, y - h, x + h, y + h], fill=(255, 247, 190, 255))
     return img
 
 def save(img, size, path):
@@ -40,8 +40,8 @@ def save(img, size, path):
 
 here = os.path.dirname(os.path.abspath(__file__))
 res = os.path.join(here, "res")
-legacy = orange(0.66, True)         # full icon for old launchers + Play Store
-fore = orange(0.58, False)          # adaptive foreground (inside the safe zone)
+legacy = lemon(0.66, True)         # full icon for old launchers + Play Store
+fore = lemon(0.58, False)          # adaptive foreground (inside the safe zone)
 for name, px, fpx in [("mdpi", 48, 108), ("hdpi", 72, 162), ("xhdpi", 96, 216),
                       ("xxhdpi", 144, 324), ("xxxhdpi", 192, 432)]:
     save(legacy, px, f"{res}/mipmap-{name}/ic_launcher.png")

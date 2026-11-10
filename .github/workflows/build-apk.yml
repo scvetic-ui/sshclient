@@ -23,7 +23,7 @@ jobs:
           channel: stable
 
       # Generates the missing Android project files (keeps our lib/ and manifest)
-      - run: flutter create --platforms=android --org com.konzola --project-name konzola .
+      - run: flutter create --platforms=android --org rs.stupovi --project-name lemonssh .
       - run: rm -rf test
       - name: Install app icon
         run: cp -r branding/res/. android/app/src/main/res/
@@ -62,7 +62,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: konzola-apk
+          name: lemonssh-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
       # Easy download on the phone: Releases → "latest" → app-release.apk

@@ -196,7 +196,7 @@ class Store extends ChangeNotifier {
       ids.add(m);
     }
     return const JsonEncoder.withIndent('  ').convert({
-      'format': 'citrus-ssh-backup',
+      'format': 'lemon-ssh-backup',
       'version': 1,
       'secrets': secrets,
       'connections': conns,
@@ -210,8 +210,8 @@ class Store extends ChangeNotifier {
   /// Merges a backup into the current data (same id = overwritten).
   Future<String> importJson(String text) async {
     final j = jsonDecode(text);
-    if (j is! Map || j['format'] != 'citrus-ssh-backup') {
-      throw const FormatException('this is not a Citrus SSH backup');
+    if (j is! Map || (j['format'] != 'lemon-ssh-backup' && j['format'] != 'citrus-ssh-backup')) {
+      throw const FormatException('this is not a Lemon SSH backup');
     }
     List<Map<String, dynamic>> list(String k) =>
         ((j[k] as List?) ?? const []).cast<Map<String, dynamic>>();

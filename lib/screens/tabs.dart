@@ -174,7 +174,7 @@ Future<void> addIdentity(BuildContext context) async {
   if (choice == 'import') {
     await Navigator.push(context, MaterialPageRoute(builder: (_) => const IdentityImportScreen()));
   } else if (choice == 'gen') {
-    final name = await prompter.ask('Key name', initial: 'konzola-phone');
+    final name = await prompter.ask('Key name', initial: 'lemon-phone');
     if (name == null || name.trim().isEmpty) return;
     final g = generateEd25519(name.trim());
     final id = Identity(id: newId(), name: name.trim(), keyType: 'ssh-ed25519', publicKey: g.publicLine);

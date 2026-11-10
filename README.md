@@ -1,6 +1,6 @@
 # Konzola — SSH klijent za Android (zamena za JuiceSSH)
 
-Naziv aplikacije je trenutno „Citrus SSH“; menja se u `lib/app_state.dart` (`appName`, a boja trake je `kBrand`) i u
+Naziv aplikacije je trenutno „Lemon SSH Client“; menja se u `lib/app_state.dart` (`appName`, a boja trake je `kBrand`) i u
 `android/app/src/main/AndroidManifest.xml` (`android:label`).
 
 ## Šta ima prva verzija
@@ -27,7 +27,7 @@ Naziv aplikacije je trenutno „Citrus SSH“; menja se u `lib/app_state.dart` (
 1. Napravi novi (privatni) repozitorijum na GitHub-u i ubaci sve fajlove iz ovog foldera
    (uključujući skriveni folder `.github`).
 2. Otvori karticu **Actions** — build kreće sam (traje oko 5–10 min).
-3. Kad se završi, otvori taj build i dole pod **Artifacts** preuzmi `konzola-apk`.
+3. Kad se završi, otvori taj build i dole pod **Artifacts** preuzmi `lemonssh-apk`.
 4. Raspakuj zip, prebaci `app-release.apk` na telefon i instaliraj
    (dozvoli „instaliranje iz nepoznatih izvora“).
 
@@ -38,8 +38,8 @@ Ako build padne, pošalji mi tekst greške iz Actions loga i ispraviću kod.
 Treba ti Flutter (stable) i Android Studio (zbog Android SDK-a).
 
 ```bash
-cd konzola
-flutter create --platforms=android --org com.konzola --project-name konzola .
+cd sshclient
+flutter create --platforms=android --org rs.stupovi --project-name lemonssh .
 flutter pub get
 flutter run            # telefon povezan USB-om, uključen USB debugging
 flutter build apk      # gotov APK: build/app/outputs/flutter-apk/app-release.apk

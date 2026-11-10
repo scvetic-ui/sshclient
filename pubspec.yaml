@@ -1,4 +1,4 @@
-name: konzola
+name: lemonssh
 description: SSH, Telnet and local terminal client for Android.
 publish_to: 'none'
 version: 0.1.0+1
