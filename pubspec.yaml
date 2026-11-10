@@ -1,0 +1,24 @@
+name: konzola
+description: SSH, Telnet and local terminal client for Android.
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dartssh2: ^2.12.0
+  xterm: ^4.0.0
+  flutter_pty: ^0.4.0
+  flutter_secure_storage: ^9.2.2
+  path_provider: ^2.1.4
+  pinenacl: any
+  uuid: ^4.4.0
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
