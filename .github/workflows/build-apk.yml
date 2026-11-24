@@ -25,6 +25,18 @@ jobs:
       # Generates the missing Android project files (keeps our lib/ and manifest)
       - run: flutter create --platforms=android --org rs.stupovi --project-name lemonssh .
       - run: rm -rf test
+      - name: Force compileSdk 36 for plugins
+        run: |
+          mkdir -p ~/.gradle/init.d
+          cat > ~/.gradle/init.d/compilesdk.gradle <<'EOF'
+          allprojects {
+            afterEvaluate { p ->
+              if (p.hasProperty('android') && p.name != 'app') {
+                p.android.compileSdkVersion 36
+              }
+            }
+          }
+          EOF
       - name: Install app icon
         run: cp -r branding/res/. android/app/src/main/res/
 
