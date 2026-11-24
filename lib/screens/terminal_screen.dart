@@ -8,6 +8,7 @@ import '../app_state.dart';
 import '../models.dart';
 import '../sessions.dart';
 import '../terminal_themes.dart';
+import 'files_screen.dart';
 
 /// Opens a saved connection (counts it for "Frequently Used").
 void openSession(BuildContext context, Connection c) {
@@ -125,6 +126,8 @@ class _TerminalScreenState extends State<TerminalScreen> {
     switch (v) {
       case 'snippets':
         _snippets();
+      case 'files':
+        openFiles(context, session);
       case 'paste':
         _paste();
       case 'copy':
@@ -195,6 +198,8 @@ class _TerminalScreenState extends State<TerminalScreen> {
                             onSelected: _onMenu,
                             itemBuilder: (_) => [
                               const PopupMenuItem(value: 'snippets', child: Text('Snippets')),
+                              if (session.conn.type == ConnType.ssh)
+                                const PopupMenuItem(value: 'files', child: Text('Files (SFTP)')),
                               const PopupMenuItem(value: 'paste', child: Text('Paste')),
                               const PopupMenuItem(value: 'copy', child: Text('Copy selection')),
                               const PopupMenuItem(value: 'bigger', child: Text('Larger font')),
