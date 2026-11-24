@@ -103,6 +103,9 @@ class SshBackend implements Backend {
 
   SshBackend(this.conn, this.store, this.ui);
 
+  /// The authenticated connection (used by the SFTP file browser).
+  SSHClient? get client => _client;
+
   @override
   Future<void> get done => _done.future;
 
