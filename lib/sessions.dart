@@ -1,3 +1,4 @@
+import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:xterm/xterm.dart';
 
@@ -28,6 +29,12 @@ class ActiveSession extends ChangeNotifier {
   }
 
   String get title => conn.label;
+
+  /// The live SSH connection, or null for Telnet/local sessions or while connecting.
+  SSHClient? get sshClient {
+    final b = backend;
+    return b is SshBackend && connected && !finished ? b.client : null;
+  }
 
   void toggleCtrl() {
     ctrl = !ctrl;
